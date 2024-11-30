@@ -1,0 +1,31 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}
+Add post
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <h1>Додати статтю</h1>
+  <form method="post" enctype="multipart/form-data">  <!-- enctype додано для роботи з файлами -->
+      {% csrf_token %}
+      <div class="mb-3">
+          {{ form.title.label_tag }}
+          {{ form.title }}
+      </div>
+      <div class="mb-3">
+          {{ form.intro.label_tag }}
+          {{ form.intro }}
+      </div>
+      <div class="mb-3">
+          {{ form.full_text.label_tag }}
+          {{ form.full_text }}
+      </div>
+      <div class="mb-3">
+          {{ form.date.label_tag }}
+          {{ form.date }}
+      </div>
+      <input type="submit" class="btn btn-success" value="Відправити">
+  </form>
+</div>
+{% endblock %}
