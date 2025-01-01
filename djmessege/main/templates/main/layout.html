@@ -14,40 +14,37 @@
     <!-- Sidebar -->
     <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark min-vh-100" style="width: 280px;">
         <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-          <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-          <span class="fs-4">Sidebar</span>
+            <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+            <span class="fs-4">Sidebar</span>
         </a>
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
-              <a href="{% url 'home' %}" class="nav-link {% if request.path == '/' %}active{% endif %} text-white" >
-                <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
-                Дім
-              </a>
+                <a href="{% url 'home' %}" class="nav-link {% if request.path == '/' %}active{% endif %} text-white">
+                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+                    Дім
+                </a>
             </li>
             <li>
-              <a href="{% url 'create' %}" class="nav-link {% if request.path == '/create-article' %}active{% endif %} text-white">
-                <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
-                Додати пост
-              </a>
+                <a href="{% url 'create' %}" class="nav-link {% if request.path == '/create-article' %}active{% endif %} text-white">
+                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
+                    Додати пост
+                </a>
             </li>
             <li>
-              <a href="/news/" class="nav-link {% if request.path == '/my-posts' %}active{% endif %} text-white">
-                <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
-                Новини
-              </a>
+                <a href="/recipes/" class="nav-link {% if request.path == '/my-posts' %}active{% endif %} text-white">
+                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
+                    Новини
+                </a>
             </li>
             <li>
-              <a href="#" class="nav-link {% if request.path == '/my-account' %}active{% endif %} text-white">
-                <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
-                Мій акаунт
-              </a>
+                <a href="{% url 'profile' %}" class="nav-link {% if request.path == '/account/profile/' %}active{% endif %} text-white">
+                    <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
+                    Мій акаунт
+                </a>
             </li>
-
-
         </ul>
         <hr>
-
     </div>
 
     <!-- Main Content -->
@@ -58,4 +55,5 @@
 </body>
 </html>
 
-<link rel="stylesheet" href="{% static 'main/css/main.css' %}"></link>
+<!-- Підключення CSS файлу -->
+<link rel="stylesheet" href="{% static 'main/css/main.css' %}">

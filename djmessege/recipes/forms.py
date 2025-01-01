@@ -1,5 +1,7 @@
 from .models import Article
 from django.forms import ModelForm, TextInput, Textarea, DateInput
+from django import forms
+from .models import Rating
 
 class ArticlesForm(ModelForm):
     class Meta:
@@ -24,3 +26,13 @@ class ArticlesForm(ModelForm):
                 'type': 'date'
             }),
         }
+
+
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model = Rating
+        fields = ['rating']
+
+    rating = forms.ChoiceField(choices=[(i, f"{i} Star{'s' if i > 1 else ''}") for i in range(1, 6)],
+                               widget=forms.RadioSelect)
+
