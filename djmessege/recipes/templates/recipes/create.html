@@ -1,31 +1,83 @@
 {% extends 'main/layout.html' %}
 
 {% block title %}
-Add post
+  Додати рецепт
 {% endblock %}
 
 {% block body %}
 <div class="container">
-  <h1>Додати рецепт</h1>
-  <form method="post" enctype="multipart/form-data">  <!-- enctype додано для роботи з файлами -->
-      {% csrf_token %}
-      <div class="mb-3">
-          {{ form.title.label_tag }}
-          {{ form.title }}
+  <h1 class="mt-5 mb-4">Додати рецепт</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <!-- Назва рецепту -->
+    <div class="mb-3">
+      {{ form.title.label_tag }}
+      {{ form.title }}
+    </div>
+
+    <!-- Фото рецепту -->
+    <div class="mb-3">
+      {{ form.photo.label_tag }}
+      {{ form.photo }}
+    </div>
+
+    <!-- Короткий опис -->
+    <div class="mb-3">
+      {{ form.description.label_tag }}
+      {{ form.description }}
+    </div>
+
+    <!-- Інгредієнти -->
+    <div class="mb-3">
+      {{ form.ingredients.label_tag }}
+      {{ form.ingredients }}
+    </div>
+
+    <!-- Покрокова інструкція -->
+    <div id="instruction-container" class="mb-3">
+      <label>Покрокова інструкція:</label>
+      <div class="instruction-step mb-3">
+        <textarea class="form-control step-text" placeholder="Опис кроку"></textarea>
+        <input type="file" class="form-control step-image mt-2">
       </div>
-      <div class="mb-3">
-          {{ form.intro.label_tag }}
-          {{ form.intro }}
-      </div>
-      <div class="mb-3">
-          {{ form.full_text.label_tag }}
-          {{ form.full_text }}
-      </div>
-      <div class="mb-3">
-          {{ form.date.label_tag }}
-          {{ form.date }}
-      </div>
-      <input type="submit" class="btn btn-success" value="Відправити">
+    </div>
+    <button type="button" id="add-step" class="btn btn-secondary mb-3">Додати крок</button>
+
+    <!-- Примітки -->
+    <div class="mb-3">
+      {{ form.notes.label_tag }}
+      {{ form.notes }}
+    </div>
+
+    <!-- Приховане поле для інструкцій -->
+    <input type="hidden" name="instructions" id="instructions-json">
+
+    <button type="submit" class="btn btn-success">Зберегти</button>
   </form>
 </div>
+
+<script>
+  // Додавання нового кроку інструкції
+  document.getElementById('add-step').addEventListener('click', function () {
+    const container = document.getElementById('instruction-container');
+    const stepDiv = document.createElement('div');
+    stepDiv.classList.add('instruction-step', 'mb-3');
+    stepDiv.innerHTML = `
+      <textarea class="form-control step-text" placeholder="Опис кроку"></textarea>
+      <input type="file" class="form-control step-image mt-2">
+    `;
+    container.appendChild(stepDiv);
+  });
+
+  // Формування JSON перед відправкою форми
+  document.querySelector('form').addEventListener('submit', function (event) {
+    const steps = [];
+    document.querySelectorAll('.instruction-step').forEach(step => {
+      const text = step.querySelector('.step-text').value;
+      const image = step.querySelector('.step-image').files[0];
+      steps.push({ text, image: null }); // Додайте тут обробку зображень, якщо потрібно
+    });
+    document.getElementById('instructions-json').value = JSON.stringify(steps);
+  });
+</script>
 {% endblock %}

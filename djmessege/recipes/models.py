@@ -3,10 +3,13 @@ from django.conf import settings
 from django.db.models import Avg
 
 class Article(models.Model):
-    title = models.CharField('Назва', max_length=50)
-    intro = models.CharField('Анонс', max_length=50)
-    full_text = models.TextField('Текст')
-    date = models.DateTimeField('Дата публікації')
+    title = models.CharField('Назва рецепту', max_length=100)
+    photo = models.ImageField('Фотографія рецепту', upload_to='recipe_photos/', blank=True, null=True)
+    description = models.TextField('Короткий опис' ,blank=True)
+    ingredients = models.TextField('Інгредієнти', blank=True)
+    instructions = models.JSONField('Інструкції', default=list,)  # Можна зберігати кроки у форматі JSON
+    notes = models.TextField('Примітки', blank=False)
+    created_at = models.DateTimeField('Дата створення', auto_now_add=True)
 
     def __str__(self):
         return self.title

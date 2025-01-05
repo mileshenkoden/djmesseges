@@ -6,28 +6,15 @@ from .models import Rating
 class ArticlesForm(ModelForm):
     class Meta:
         model = Article
-        fields = ["title", "intro", "full_text", "date"]
+        fields = ['title', 'photo', 'description', 'ingredients', 'instructions', 'notes']
 
         widgets = {
-            "title": TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': "Назва статті"
-            }),
-            "intro": Textarea(attrs={
-                'class': 'form-control',
-                'placeholder': "Введіть короткий вступ"
-            }),
-            "full_text": Textarea(attrs={
-                'class': 'form-control',
-                'placeholder': "Введіть текст статті"
-            }),
-            "date": DateInput(attrs={
-                'class': 'form-control',
-                'type': 'date'
-            }),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Назва рецепту'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Короткий опис'}),
+            'ingredients': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Інгредієнти'}),
+            'instructions': forms.HiddenInput(),  # Інструкції будуть динамічно додаватися через JavaScript
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Примітки (необов’язково)'}),
         }
-
-
 class RatingForm(forms.ModelForm):
     class Meta:
         model = Rating

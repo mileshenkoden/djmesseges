@@ -18,20 +18,16 @@ News
       </div>
     </div>
     {% for recipe in recipes %}
-      <h3>{{ recipe.title }}</h3>
-      <p>{{ recipe.intro }}</p>
-      <p>
-        Рейтинг:
-        {% for star in recipe.full_stars %}
-          <span style="color: gold;">★</span>
-        {% endfor %}
-        {% for star in recipe.empty_stars %}
-          <span style="color: lightgray;">★</span>
-        {% endfor %}
-        ({{ recipe.avg_rating|floatformat:1 }})
-      </p>
+        {% if recipe.id %}
+            <h3>{{ recipe.title }}</h3>
+            <p>{{ recipe.intro }}</p>
+            <p>{{ recipe.id }}</p>
+            <a href="{% url 'recipes-detail' recipe.id %}" class="btn btn-primary my-2">Детальніше</a>
+        {% else %}
+            <p>Ця стаття не має коректного ID.</p>
+        {% endif %}
     {% endfor %}
-
   </section>
 </main>
 {% endblock %}
+
