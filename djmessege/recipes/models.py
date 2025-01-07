@@ -1,14 +1,22 @@
-from django.db import models
 from django.conf import settings
 from django.db.models import Avg
+from django.db import models
+import uuid
+import os
+
+def article_image_upload_to(instance, filename):
+    # Генеруємо унікальне ім'я файлу, додаючи ID або UUID до оригінальної назви
+    ext = filename.split('.')[-1]
+    unique_name = f"{uuid.uuid4().hex}.{ext}"  # додаємо унікальний ідентифікатор до розширення
+    return os.path.join('recipe_photos/', unique_name)
 
 class Article(models.Model):
     title = models.CharField('Назва рецепту', max_length=100)
-    photo = models.ImageField('Фотографія рецепту', upload_to='recipe_photos/', blank=True, null=True)
-    description = models.TextField('Короткий опис' ,blank=True)
-    ingredients = models.TextField('Інгредієнти', blank=True)
-    instructions = models.JSONField('Інструкції', default=list,)  # Можна зберігати кроки у форматі JSON
-    notes = models.TextField('Примітки', blank=False)
+    photo = models.ImageField('Фотографія рецепту', upload_to=article_image_upload_to, blank=True, null=True)
+    description = models.TextField('Короткий опис')
+    ingredients = models.TextField('Інгредієнти')
+    instructions = models.JSONField('Інструкції', default=list)  # Можна зберігати кроки у форматі JSON
+    notes = models.TextField('Примітки', blank=True, null=True)
     created_at = models.DateTimeField('Дата створення', auto_now_add=True)
 
     def __str__(self):

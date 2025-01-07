@@ -11,8 +11,10 @@
   <!-- Основне зображення рецепта -->
   {% if article.photo %}
     <div class="text-center mb-4">
-      <img src="{{ article.photo.url }}" alt="{{ article.title }}" class="img-fluid" style="max-height: 400px;">
+      <img src="/media/recipe_photos/1" alt="{{ article.title }}" class="img-fluid" style="max-height: 400px;">
+
     </div>
+  {{ article.photo.url }}
   {% endif %}
 
   <!-- Короткий опис -->
@@ -56,6 +58,7 @@
       <p>{{ article.notes }}</p>
     </div>
   {% endif %}
+
 
   <!-- Дії -->
   <div class="text-center">
