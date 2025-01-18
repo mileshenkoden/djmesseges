@@ -3,20 +3,32 @@ from django.db.models import Avg
 from django.db import models
 import uuid
 import os
+import json
+from django.core.exceptions import ValidationError
+
+def validate_step_image(image):
+    if image and not image.name.lower().endswith(('.png', '.jpg', '.jpeg', ".pdf")):
+        raise ValidationError('Неприпустимий формат зображення. Використовуйте .png, .jpg або .jpeg.')
 
 def article_image_upload_to(instance, filename):
-    # Генеруємо унікальне ім'я файлу, додаючи ID або UUID до оригінальної назви
     ext = filename.split('.')[-1]
-    unique_name = f"{uuid.uuid4().hex}.{ext}"  # додаємо унікальний ідентифікатор до розширення
+    unique_name = f"{uuid.uuid4().hex}.{ext}"
     return os.path.join('recipe_photos/', unique_name)
+
+def step_image_upload_to(instance, filename):
+    ext = filename.split('.')[-1]
+    unique_name = f"{uuid.uuid4().hex}.{ext}"
+    return os.path.join(f'steps/{instance.article.id}/', unique_name)
+
+
 
 class Article(models.Model):
     title = models.CharField('Назва рецепту', max_length=100)
-    photo = models.ImageField('Фотографія рецепту', upload_to=article_image_upload_to, blank=True, null=True)
+    photo = models.ImageField('Фотографія рецепту', upload_to=article_image_upload_to, null=True)
     description = models.TextField('Короткий опис')
     ingredients = models.TextField('Інгредієнти')
-    instructions = models.JSONField('Інструкції', default=list)  # Можна зберігати кроки у форматі JSON
-    notes = models.TextField('Примітки', blank=True, null=True)
+    instructions = models.JSONField('Інструкції', blank=False, default=list)  # Можна зберігати кроки у форматі JSON
+    notes = models.TextField('Примітки',  null=True)
     created_at = models.DateTimeField('Дата створення', auto_now_add=True)
 
     def __str__(self):
@@ -28,6 +40,32 @@ class Article(models.Model):
     def average_rating(self):
         rating = self.ratings.aggregate(Avg('rating'))['rating__avg']
         return round(rating, 1) if rating else '0'
+
+    def clean(self):
+        super().clean()  # Викликаємо стандартний метод `clean`
+
+        # Перевірка, що поле instructions — це список
+        if not isinstance(self.instructions, list):
+            raise ValidationError('Інструкції мають бути списком.')
+
+        # Додаткова перевірка для кожного кроку
+        for step in self.instructions:
+            if 'text' not in step or not step['text']:
+                raise ValidationError('Кожен крок повинен мати опис.')
+
+
+
+class Step(models.Model):
+    article = models.ForeignKey(Article, related_name='steps', on_delete=models.CASCADE)
+    text = models.TextField('Опис кроку')
+    image = models.ImageField('Зображення кроку', upload_to=step_image_upload_to, blank=True, null=True)
+
+    def clean(self):
+        if self.image:
+            validate_step_image(self.image)
+
+    def __str__(self):
+        return f"Крок для: {self.article.title}"
 
 
 class Rating(models.Model):

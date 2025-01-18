@@ -13,4 +13,5 @@ urlpatterns = [
     path('<int:pk>', views.NewDetailView.as_view(), name='recipes-detail'),
     path('<int:pk>/delete', views.NewDeleteView.as_view(), name='recipes-delete'),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+

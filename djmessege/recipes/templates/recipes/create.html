@@ -7,8 +7,23 @@
 {% block body %}
 <div class="container">
   <h1 class="mt-5 mb-4">Додати рецепт</h1>
+
+  <!-- Виведення помилок форми -->
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <ul>
+        {% for field in form %}
+          {% for error in field.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
+
     <!-- Назва рецепту -->
     <div class="mb-3">
       {{ form.title.label_tag }}
@@ -49,6 +64,9 @@
       {{ form.notes }}
     </div>
 
+
+
+
     <!-- Приховане поле для інструкцій -->
     <input type="hidden" name="instructions" id="instructions-json">
 
@@ -62,22 +80,27 @@
     const container = document.getElementById('instruction-container');
     const stepDiv = document.createElement('div');
     stepDiv.classList.add('instruction-step', 'mb-3');
-    stepDiv.innerHTML = `
-      <textarea class="form-control step-text" placeholder="Опис кроку"></textarea>
-      <input type="file" class="form-control step-image mt-2">
-    `;
+    stepDiv.innerHTML =
+      '<textarea class="form-control step-text" placeholder="Опис кроку"></textarea>' +
+      '<input type="file" class="form-control step-image mt-2">';
     container.appendChild(stepDiv);
   });
 
   // Формування JSON перед відправкою форми
   document.querySelector('form').addEventListener('submit', function (event) {
-    const steps = [];
-    document.querySelectorAll('.instruction-step').forEach(step => {
-      const text = step.querySelector('.step-text').value;
-      const image = step.querySelector('.step-image').files[0];
-      steps.push({ text, image: null }); // Додайте тут обробку зображень, якщо потрібно
-    });
-    document.getElementById('instructions-json').value = JSON.stringify(steps);
+      const steps = [];
+      document.querySelectorAll('.instruction-step').forEach(step => {
+          const text = step.querySelector('.step-text').value;
+          const imageInput = step.querySelector('.step-image');
+          const imageFile = imageInput.files.length > 0 ? imageInput.files[0].name : null;
+          steps.push({ text, image: imageFile });
+      });
+
+      // Формуємо JSON-строку
+      document.getElementById('instructions-json').value = JSON.stringify(steps);
   });
+
+
 </script>
+
 {% endblock %}

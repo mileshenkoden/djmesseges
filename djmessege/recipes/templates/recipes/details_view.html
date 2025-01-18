@@ -11,10 +11,8 @@
   <!-- Основне зображення рецепта -->
   {% if article.photo %}
     <div class="text-center mb-4">
-      <img src="/media/recipe_photos/1" alt="{{ article.title }}" class="img-fluid" style="max-height: 400px;">
-
+      <img src="{{ article.photo.url }}" alt="{{ article.title }}" class="img-fluid" style="max-height: 400px;">
     </div>
-  {{ article.photo.url }}
   {% endif %}
 
   <!-- Короткий опис -->
@@ -34,7 +32,7 @@
   </div>
 
   <!-- Інструкція -->
-   <div class="mb-4">
+  <div class="mb-4">
     <h4>Інструкція:</h4>
     <ol>
       {% for step in article.instructions %}
@@ -42,14 +40,13 @@
           <p>{{ step.text }}</p>
           {% if step.image %}
             <div class="text-center">
-              <img src="{{ step.image }}" alt="Крок {{ forloop.counter }}" class="img-fluid" style="max-height: 300px;">
+              <img src="{{ step.image.url }}" alt="Крок {{ forloop.counter }}" class="img-fluid" style="max-height: 300px;">
             </div>
           {% endif %}
         </li>
       {% endfor %}
     </ol>
   </div>
-
 
   <!-- Примітки -->
   {% if article.notes %}
@@ -58,7 +55,6 @@
       <p>{{ article.notes }}</p>
     </div>
   {% endif %}
-
 
   <!-- Дії -->
   <div class="text-center">
